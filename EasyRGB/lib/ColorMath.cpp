@@ -6,7 +6,8 @@ namespace ColorLib {
 
 Cmyk ColorMath::rgbToCmyk(const Rgb &rgb) {
   const double k = 1.0 - std::max({rgb.r, rgb.g, rgb.b});
-  if (k >= 1.0) return {0.0, 0.0, 0.0, 1.0};
+  if (k >= 1.0)
+    return {0.0, 0.0, 0.0, 1.0};
   const double d = 1.0 - k;
   return {(d - rgb.r) / d, (d - rgb.g) / d, (d - rgb.b) / d, k};
 }
@@ -24,9 +25,11 @@ Hls ColorMath::rgbToHls(const Rgb &rgb) {
   const double delta = max - min;
   const double l = (max + min) * 0.5;
 
-  if (delta <= 1e-9) return {0.0, l, 0.0};
+  if (delta <= 1e-9)
+    return {0.0, l, 0.0};
 
-  const double s = (l <= 0.5) ? (delta / (max + min)) : (delta / (2.0 - max - min));
+  const double s =
+      (l <= 0.5) ? (delta / (max + min)) : (delta / (2.0 - max - min));
   double h = 0.0;
 
   if (rgb.r >= max) {
@@ -41,18 +44,25 @@ Hls ColorMath::rgbToHls(const Rgb &rgb) {
 }
 
 double ColorMath::hueToRgb(double p, double q, double t) {
-  if (t < 0.0) t += 1.0;
-  if (t > 1.0) t -= 1.0;
-  if (t < 1.0 / 6.0) return p + (q - p) * 6.0 * t;
-  if (t < 0.5) return q;
-  if (t < 2.0 / 3.0) return p + (q - p) * (2.0 / 3.0 - t) * 6.0;
+  if (t < 0.0)
+    t += 1.0;
+  if (t > 1.0)
+    t -= 1.0;
+  if (t < 1.0 / 6.0)
+    return p + (q - p) * 6.0 * t;
+  if (t < 0.5)
+    return q;
+  if (t < 2.0 / 3.0)
+    return p + (q - p) * (2.0 / 3.0 - t) * 6.0;
   return p;
 }
 
 Rgb ColorMath::hlsToRgb(const Hls &hls) {
-  if (hls.s <= 1e-9) return {hls.l, hls.l, hls.l};
+  if (hls.s <= 1e-9)
+    return {hls.l, hls.l, hls.l};
 
-  const double q = (hls.l < 0.5) ? (hls.l * (1.0 + hls.s)) : (hls.l + hls.s - hls.l * hls.s);
+  const double q =
+      (hls.l < 0.5) ? (hls.l * (1.0 + hls.s)) : (hls.l + hls.s - hls.l * hls.s);
   const double p = 2.0 * hls.l - q;
   const double hk = hls.h / 360.0;
 
@@ -66,7 +76,8 @@ Rgb ColorMath::hsvToRgb(double h, double s, double v) {
   s = std::clamp(s, 0.0, 1.0);
   v = std::clamp(v, 0.0, 1.0);
 
-  if (s <= 1e-9) return {v, v, v};
+  if (s <= 1e-9)
+    return {v, v, v};
 
   const double hSector = (h >= 360.0 ? 0.0 : h) / 60.0;
   const int i = static_cast<int>(hSector);
@@ -76,12 +87,18 @@ Rgb ColorMath::hsvToRgb(double h, double s, double v) {
   const double t = v * (1.0 - s * (1.0 - f));
 
   switch (i) {
-    case 0: return {v, t, p};
-    case 1: return {q, v, p};
-    case 2: return {p, v, t};
-    case 3: return {p, q, v};
-    case 4: return {t, p, v};
-    default: return {v, p, q};
+  case 0:
+    return {v, t, p};
+  case 1:
+    return {q, v, p};
+  case 2:
+    return {p, v, t};
+  case 3:
+    return {p, q, v};
+  case 4:
+    return {t, p, v};
+  default:
+    return {v, p, q};
   }
 }
 
@@ -118,7 +135,8 @@ QString ColorMath::rgbToHex(const Rgb &rgb) {
 
 Rgb ColorMath::hexToRgb(const QString &hex, bool &ok) {
   QString clean = hex.trimmed();
-  if (clean.startsWith('#')) clean.remove(0, 1);
+  if (clean.startsWith('#'))
+    clean.remove(0, 1);
   if (clean.length() != 6) {
     ok = false;
     return {};
@@ -128,11 +146,36 @@ Rgb ColorMath::hexToRgb(const QString &hex, bool &ok) {
   const int g = clean.mid(2, 2).toInt(&gOk, 16);
   const int b = clean.mid(4, 2).toInt(&bOk, 16);
   ok = rOk && gOk && bOk;
-  if (!ok) return {};
+  if (!ok)
+    return {};
   return {r / 255.0, g / 255.0, b / 255.0};
 }
 
-QString ColorMath::formatReport(const Rgb &rgb, const Cmyk &cmyk, const Hls &hls, const QString &hex) {
+void ColorMath::rgbToXy(const Rgb &rgb, double &x, double &y) {
+  auto toLinear = [](double c) {
+    return (c <= 0.04045) ? (c / 12.92) : std::pow((c + 0.055) / 1.055, 2.4);
+  };
+
+  const double rLin = toLinear(rgb.r);
+  const double gLin = toLinear(rgb.g);
+  const double bLin = toLinear(rgb.b);
+
+  const double X = rLin * 0.4124564 + gLin * 0.3575761 + bLin * 0.1804375;
+  const double Y = rLin * 0.2126729 + gLin * 0.7151522 + bLin * 0.0721750;
+  const double Z = rLin * 0.0193339 + gLin * 0.1191920 + bLin * 0.9503041;
+
+  const double sum = X + Y + Z;
+  if (sum <= 1e-9) {
+    x = 0.3127;
+    y = 0.3290;
+  } else {
+    x = X / sum;
+    y = Y / sum;
+  }
+}
+
+QString ColorMath::formatReport(const Rgb &rgb, const Cmyk &cmyk,
+                                const Hls &hls, const QString &hex) {
   const int r = static_cast<int>(std::round(rgb.r * 255.0));
   const int g = static_cast<int>(std::round(rgb.g * 255.0));
   const int b = static_cast<int>(std::round(rgb.b * 255.0));
@@ -172,4 +215,4 @@ QString ColorMath::formatReport(const Rgb &rgb, const Cmyk &cmyk, const Hls &hls
       .arg(hls.l * 100.0, 4, 'f', 1);
 }
 
-}
+} // namespace ColorLib

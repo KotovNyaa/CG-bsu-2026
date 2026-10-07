@@ -1,10 +1,12 @@
 #include "TopPanel.h"
 #include "../common/InputRow.h"
+#include "CieDialog.h"
 #include "Picker2D.h"
 #include "PreviewBox.h"
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPlainTextEdit>
+#include <QPushButton>
 #include <QRegularExpression>
 #include <QRegularExpressionValidator>
 #include <QVBoxLayout>
@@ -41,15 +43,29 @@ TopPanel::TopPanel(QWidget *parent) : QFrame(parent) {
   actionsLayout->setContentsMargins(0, 2, 0, 2);
   actionsLayout->setSpacing(8);
 
-  auto *title = new QLabel("Lab 1: Convert color data", actions);
+  auto *headerRow = new QWidget(actions);
+  auto *headerLayout = new QHBoxLayout(headerRow);
+  headerLayout->setContentsMargins(0, 0, 0, 0);
+  headerLayout->setSpacing(0);
+
+  auto *title = new QLabel("Lab 1: Convert color data", headerRow);
   title->setObjectName("titleLabel");
+
+  m_mkoBtn = new QPushButton("MKO", headerRow);
+  m_mkoBtn->setObjectName("mkoBtn");
+  m_mkoBtn->setFixedSize(80, 28);
+  m_mkoBtn->setCursor(Qt::PointingHandCursor);
+
+  headerLayout->addWidget(title);
+  headerLayout->addStretch(1);
+  headerLayout->addWidget(m_mkoBtn);
 
   m_hexRow = new InputRow("HEX", actions);
   m_hexRow->setPlaceholder("#RRGGBB");
   m_hexRow->setValidator(new QRegularExpressionValidator(
       QRegularExpression("^#?[0-9A-Fa-f]{6}$"), m_hexRow));
 
-  actionsLayout->addWidget(title);
+  actionsLayout->addWidget(headerRow);
   actionsLayout->addWidget(m_hexRow);
 
   topControlsLayout->addWidget(m_preview);
@@ -65,6 +81,14 @@ TopPanel::TopPanel(QWidget *parent) : QFrame(parent) {
 
   mainLayout->addWidget(info, 1);
 
+  m_cieDialog = new CieDialog(this);
+
+  connect(m_mkoBtn, &QPushButton::clicked, this, [this]() {
+    m_cieDialog->show();
+    m_cieDialog->raise();
+    m_cieDialog->activateWindow();
+  });
+
   connect(m_picker, &Picker2D::hsvChanged, this,
           [this](double h, double s, double v) {
             emit hsvChanged(h, s, v, m_picker);
@@ -76,14 +100,24 @@ TopPanel::TopPanel(QWidget *parent) : QFrame(parent) {
 void TopPanel::setPreviewColor(const QColor &color) {
   m_preview->setColor(color);
 }
+
+void TopPanel::setRgb(const ColorLib::Rgb &rgb) {
+  setPreviewColor(QColor::fromRgbF(rgb.r, rgb.g, rgb.b));
+  if (m_cieDialog) {
+    m_cieDialog->setRgb(rgb);
+  }
+}
+
 void TopPanel::setHex(const QString &hex, QObject *origin) {
   if (origin != m_hexRow)
     m_hexRow->setValue(hex);
 }
+
 void TopPanel::setHsv(double h, double s, double v, QObject *origin) {
   if (origin != m_picker)
     m_picker->setHsv(h, s, v);
 }
+
 void TopPanel::setReport(const QString &report) {
   m_console->setPlainText(report);
 }

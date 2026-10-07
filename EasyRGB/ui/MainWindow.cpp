@@ -105,7 +105,7 @@ void MainWindow::bindController() {
 
   connect(m_controller, &Controller::rgbUpdated, this,
           [this](const ColorLib::Rgb &c, QObject *origin) {
-            m_topPanel->setPreviewColor(QColor::fromRgbF(c.r, c.g, c.b));
+            m_topPanel->setRgb(c);
             m_rgbCard->setValues(c, origin);
           });
 

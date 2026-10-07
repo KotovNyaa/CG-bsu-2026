@@ -33,6 +33,8 @@ add_executable(ColorConverter
     ui/widgets/models/CmykCard.cpp
     ui/widgets/models/HlsCard.h
     ui/widgets/models/HlsCard.cpp
+    ui/widgets/top/CieDialog.h
+    ui/widgets/top/CieDialog.cpp
     ui/widgets/top/Picker2D.h
     ui/widgets/top/Picker2D.cpp
     ui/widgets/top/PreviewBox.h

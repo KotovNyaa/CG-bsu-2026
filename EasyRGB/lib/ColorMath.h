@@ -19,10 +19,13 @@ public:
   static QString rgbToHex(const Rgb &rgb);
   static Rgb hexToRgb(const QString &hex, bool &ok);
 
-  static QString formatReport(const Rgb &rgb, const Cmyk &cmyk, const Hls &hls, const QString &hex);
+  static void rgbToXy(const Rgb &rgb, double &x, double &y);
+
+  static QString formatReport(const Rgb &rgb, const Cmyk &cmyk, const Hls &hls,
+                              const QString &hex);
 
 private:
   static double hueToRgb(double p, double q, double t);
 };
 
-}
+} // namespace ColorLib
