@@ -1,5 +1,6 @@
 #include "RgbCard.h"
 #include <QStringList>
+#include <cmath>
 
 RgbCard::RgbCard(QWidget *parent)
     : BaseCard("RGB (Red, Green, Blue)", "RGB", parent) {
