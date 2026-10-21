@@ -1,0 +1,176 @@
+QMainWindow {
+    background-color: #0d0e11;
+}
+
+#top {
+    background-color: #16171b;
+    border-bottom: 1px solid #23252b;
+}
+
+#viewer {
+    background-color: #0a0b0d;
+}
+
+#tools {
+    background-color: #16171b;
+    border-left: 1px solid #23252b;
+}
+
+#status {
+    background-color: #121316;
+    border-top: 1px solid #23252b;
+}
+
+#sectionTitle {
+    color: #8b949e;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+}
+
+QPushButton {
+    background-color: #1b1d22;
+    border: 1px solid #282a30;
+    border-radius: 4px;
+    color: #e6edf3;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+}
+
+QPushButton:hover {
+    background-color: #262930;
+    border-color: #3b82f6;
+}
+
+QPushButton:pressed {
+    background-color: #121316;
+}
+
+QPushButton:checked {
+    background-color: #1e3a5f;
+    border-color: #3b82f6;
+    color: #60a5fa;
+}
+
+#commitBtn {
+    background-color: #2563eb;
+    border: 1px solid #3b82f6;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+#commitBtn:hover {
+    background-color: #1d4ed8;
+}
+
+QComboBox {
+    background-color: #0f1013;
+    border: 1px solid #282a30;
+    border-radius: 4px;
+    color: #e6edf3;
+    font-size: 11px;
+    padding: 3px 20px 3px 8px;
+}
+
+QComboBox:hover, QComboBox:focus {
+    border-color: #3b82f6;
+}
+
+QComboBox::drop-down {
+    border: none;
+    background: transparent;
+}
+
+QListView#comboView {
+    background-color: #16171b;
+    border: 1px solid #282a30;
+    padding: 0px;
+    margin: 0px;
+    outline: none;
+    color: #e6edf3;
+}
+
+QListView#comboView::item {
+    height: 24px;
+    padding-left: 8px;
+}
+
+QListView#comboView::item:selected {
+    background-color: #2563eb;
+    color: #ffffff;
+}
+
+#sliderLabel {
+    color: #8b949e;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+QSlider {
+    min-height: 26px;
+}
+
+QSlider::groove:horizontal {
+    height: 6px;
+    background: #23252b;
+    border-radius: 3px;
+}
+
+QSlider::sub-page:horizontal {
+    background: #3b82f6;
+    border-radius: 3px;
+}
+
+QSlider::handle:horizontal {
+    background: #e6edf3;
+    width: 14px;
+    height: 14px;
+    margin-top: -4px;
+    margin-bottom: -4px;
+    border-radius: 7px;
+}
+
+QSlider::handle:horizontal:hover {
+    background: #ffffff;
+    border: 1px solid #3b82f6;
+}
+
+QSpinBox {
+    background-color: #0f1013;
+    border: 1px solid #282a30;
+    border-radius: 4px;
+    color: #e6edf3;
+    font-family: monospace;
+    font-size: 11px;
+    padding: 2px 4px;
+}
+
+QSpinBox:focus {
+    border-color: #3b82f6;
+}
+
+#histCanvas {
+    background-color: #0c0d10;
+    border: 1px solid #23252b;
+    border-radius: 3px;
+}
+
+#statsLabel {
+    color: #6e7681;
+    font-family: monospace;
+    font-size: 10px;
+}
+
+#statusText {
+    color: #8b949e;
+    font-family: monospace;
+    font-size: 11px;
+}
+
+#statusBadge {
+    font-family: monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: #3b82f6;
+}
